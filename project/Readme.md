@@ -1,4 +1,5 @@
 #Daisy project
+
 PyAudio - PyAudio provides Python bindings for PortAudio, the cross-platform audio I/O library. With PyAudio, you can easily use Python to play and record audio on a variety of platforms.
 
 PocketSphinx - Pocketsphinx is a part of the CMU Sphinx Open Source Toolkit for Speech Recognition. This package provides a python interface to CMU Sphinxbase and Pocketsphinx libraries created with SWIG and Setuptools.
