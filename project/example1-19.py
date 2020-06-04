@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
-# NOTE: this example requires PyAudio because it uses the Microphone class
+# NOTE : this example requires PyAudio because it uses the Microphone class
+
 import speech_recognition as sr
-print(sr.__version__)
+
 
 # obtain audio from the microphone
 r = sr.Recognizer()
