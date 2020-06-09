@@ -11,7 +11,7 @@ engine.setProperty('rate', 100)
 # obtain audio from the microphone
 r = sr.Recognizer()
 # r.energy_threshold = 200
-# r.dynamic_energy_threshold = True 
+# r.dynami  c_energy_threshold = True 
 with sr.Microphone() as source:
     print("Please wait. Calibrating microphone...")
     # r.energy_threshold = 2500   
