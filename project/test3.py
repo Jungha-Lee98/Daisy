@@ -18,7 +18,7 @@ with sr.Microphone(device_index=1, sample_rate=48000, chunk_size=1024) as source
     # r.energy_threshold = 5000   
     # listen for 5 seconds and create the ambient noise energy level   
     r.adjust_for_ambient_noise(source, duration=1) 
-    r.energy_threshold = 500
+    r.energy_threshold = 1000
     r.dynamic_energy_threshold = True
     r.dynamic_energy_adjustment_damping = 0.15
     r.dynamic_energy_adjustment_ratio = 2
@@ -43,15 +43,22 @@ try:
     sqlquery=[]         
 
     for loop in speek_list:
-        if loop == ('How' or 'Which'):
+        if loop == ('how' or 'which'):
             sqlquery.append("SELECT ")
 
         elif loop == ('many'):
             sqlquery.append("count(*) ")
             sqlquery.append("from divvy_2015 ")
 
+        elif loop == ('customer'):
+            sqlquery.append('where usertype="Customer" ')
+        
         elif loop == ('people'):
-            sqlquery.append('where usertype="customer" ')
+            sqlquery.append('where usertype="Subscriber" ')
+        
+        elif loop == ('female'):
+            sqlquery.append('where gender="Female"')
+        
 
          
 
@@ -75,11 +82,14 @@ try:
     for row in cursor:
         print(row)
         print("\n")
-    cursor.close()
-    
 
-    engine.say(r.recognize_sphinx(audio))
+    engine.say("I think {0} left".format(row))
     engine.runAndWait()
+
+    cursor.close()
+
+    #engine.say(r.recognize_sphinx(audio))
+    #engine.runAndWait()
 except sr.UnknownValueError:
     print("Sphinx could not understand audio")
 except sr.RequestError as e:
