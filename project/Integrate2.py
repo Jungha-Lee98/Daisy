@@ -33,33 +33,66 @@ try:
     word_list = []
     word_list = r.recognize_sphinx(audio).split(' ')
 
-    speek_list = []
-
     for words in word_list:
         if words!= 'a':
-            speek_list.append(words)
-    print(speek_list)
+            word_list.append(words)
+    print(word_list)
 
-    sqlquery=[]         
+# word_list=['where', 'place','that','people' 'use','the', 'most']
+# word_list=['what','is','the','average','time','of','bicycles','for','members']
+# word_list=['what','average','age',"female",'users']
+# word_list=['how', 'many', 'customer','rent', 'bicycles']
+# word_list=['how', 'many', 'subscriber','rent', 'bicycles']
+# word_list=['how', 'many', 'females','rent', 'bicycles']
 
-    for loop in speek_list:
-        if loop == ('how' or 'which'):
-            sqlquery.append("SELECT ")
+    sqlquery = []
 
+    def avg():
+        for i in range(len(word_list)):
+            if word_list[i]=='average':
+                if word_list[i+1] == 'time':
+                    return('avg(tripduration) ')
+                elif word_list[i+1] == 'age':
+                    return('avg(tripduration) ')
+
+    for loop in word_list:
+
+        if loop == 'what' or loop =='which' or loop =='where' or loop == "where's" or loop == 'how':
+            sqlquery.append("select ")
+
+        elif loop == ('place' or 'station'):
+            sqlquery.append("from_station_name ")
+            sqlquery.append("from divvy_2015 group by from_station_name ")
+
+
+        elif loop == 'average':
+            sqlquery.append(avg()) 
+
+        elif loop == 'each':
+            sqlquery.append('from divvy_2015 ')
+            sqlquery.append('group by ')
+
+        elif loop == 'members' or loop == 'member':
+            sqlquery.append("from divvy_2015 where usertype='Subscriber' ")
+        
+        elif loop == 'most' or (loop == 'almost'):
+            sqlquery.append("order by count(*) desc ")
+            sqlquery.append("limit 1 ")
+            # sqlquery.insert(1,"count(*), ")
+        
         elif loop == ('many'):
             sqlquery.append("count(*) ")
-            sqlquery.append("from divvy_2015 ")
 
         elif loop == ('customer'):
-            sqlquery.append('where usertype="Customer" ')
-        
+            sqlquery.append('from divvy_2015 where usertype="Customer" ')
+                
         elif loop == ('subscriber'):
-            sqlquery.append('where usertype="Subscriber" ')
-        
-        elif loop == ('female'):
-            sqlquery.append('where gender="Female"')
+            sqlquery.append('from divvy_2015 where usertype="Subscriber" ')
+                
+        elif loop == 'female' or (loop == 'females'):
+            sqlquery.append('from divvy_2015 where gender="Female"')
+            
 
-        
 
     print(''.join(sqlquery) + ';')
 
