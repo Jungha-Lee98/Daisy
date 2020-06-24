@@ -9,6 +9,10 @@ rate = engine.getProperty('rate')   # getting details of current speaking rate
 print (rate)                        #printing current voice rate
 engine.setProperty('rate', 100) 
 
+engine.say("Hi, I'm Daisy")
+engine.runAndWait()
+print("Hi, I'm Daisy") 
+
 # obtain audio from the microphone
 r = sr.Recognizer()
 # r.energy_threshold = 200
@@ -24,19 +28,26 @@ with sr.Microphone(device_index=1, sample_rate=48000, chunk_size=1024) as source
     r.dynamic_energy_adjustment_ratio = 2
     r.pause_threshold = 0.8  
     # r.dynamic_energy_threshold = True  
+   
+    engine.say("Say something!")
+    engine.runAndWait()
     print("Say something!")
     audio = r.listen(source)
 
 # recognize speech using Sphinx
 try:
     print("Sphinx thinks you said " + r.recognize_sphinx(audio))
-    word_list = []
-    word_list = r.recognize_sphinx(audio).split(' ')
+    
+    all_words_list=[]
+    words_list = []
 
-    for words in word_list:
+    all_words_list = r.recognize_sphinx(audio).split(' ')
+    print(all_words_list)
+
+    for words in all_words_list:
         if words!= 'a':
-            word_list.append(words)
-    print(word_list)
+            words_list.append(words)
+    print(words_list)
 
 # word_list=['where', 'place','that','people' 'use','the', 'most']
 # word_list=['what','is','the','average','time','of','bicycles','for','members']
@@ -48,14 +59,14 @@ try:
     sqlquery = []
 
     def avg():
-        for i in range(len(word_list)):
-            if word_list[i]=='average':
-                if word_list[i+1] == 'time':
+        for i in range(len(words_list)):
+            if words_list[i]=='average':
+                if words_list[i+1] == 'time':
                     return('avg(tripduration) ')
-                elif word_list[i+1] == 'age':
+                elif words_list[i+1] == 'age':
                     return('avg(tripduration) ')
 
-    for loop in word_list:
+    for loop in words_list:
 
         if loop == 'what' or loop =='which' or loop =='where' or loop == "where's" or loop == 'how':
             sqlquery.append("select ")
@@ -93,7 +104,6 @@ try:
             sqlquery.append('from divvy_2015 where gender="Female"')
             
 
-
     print(''.join(sqlquery) + ';')
 
 
@@ -115,7 +125,20 @@ try:
         print(row)
         print("\n")
 
-    engine.say("I think {0} left".format(row))
+    answer_list=[]
+
+    for word in all_words_list:
+        if (word == 'how') or (word =='many') or (word == 'what') or (word == 'where') or (word == 'which'):
+            continue
+        else:
+            answer_list.append('{0} '.format(word))
+    print(answer_list)
+
+    answer = ('{0}' +' '+ ''.join(answer_list)).format(row)
+
+    print(answer)
+
+    engine.say(answer)
     engine.runAndWait()
 
     cursor.close()

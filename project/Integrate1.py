@@ -18,9 +18,9 @@ with sr.Microphone(device_index=1, sample_rate=48000, chunk_size=1024) as source
     # r.energy_threshold = 5000   
     # listen for 5 seconds and create the ambient noise energy level   
     r.adjust_for_ambient_noise(source, duration=1) 
-    r.energy_threshold = 1000
+    r.energy_threshold = 2000
     r.dynamic_energy_threshold = True
-    r.dynamic_energy_adjustment_damping = 0.15
+    r.dynamic_energy_adjustment_damping = 0.5
     r.dynamic_energy_adjustment_ratio = 2
     r.pause_threshold = 0.8  
     # r.dynamic_energy_threshold = True  
@@ -30,36 +30,25 @@ with sr.Microphone(device_index=1, sample_rate=48000, chunk_size=1024) as source
 # recognize speech using Sphinx
 try:
     print("Sphinx thinks you said " + r.recognize_sphinx(audio))
-    
-    all_words_list=[]
-    words_list = []
+    word_list = []
+    word_list = r.recognize_sphinx(audio).split(' ')
 
-    all_words_list = r.recognize_sphinx(audio).split(' ')
-    print(all_words_list)
-
-    for words in all_words_list:
+    for words in word_list:
         if words!= 'a':
-            words_list.append(words)
-    print(words_list)
-
-# word_list=['where', 'place','that','people' 'use','the', 'most']
-# word_list=['what','is','the','average','time','of','bicycles','for','members']
-# word_list=['what','average','age',"female",'users']
-# word_list=['how', 'many', 'customer','rent', 'bicycles']
-# word_list=['how', 'many', 'subscriber','rent', 'bicycles']
-# word_list=['how', 'many', 'females','rent', 'bicycles']
+            word_list.append(words)
+    print(word_list)
 
     sqlquery = []
 
     def avg():
-        for i in range(len(words_list)):
-            if words_list[i]=='average':
-                if words_list[i+1] == 'time':
+        for i in range(len(word_list)):
+            if word_list[i]=='average':
+                if word_list[i+1] == 'time':
                     return('avg(tripduration) ')
-                elif words_list[i+1] == 'age':
+                elif word_list[i+1] == 'age':
                     return('avg(tripduration) ')
 
-    for loop in words_list:
+    for loop in word_list:
 
         if loop == 'what' or loop =='which' or loop =='where' or loop == "where's" or loop == 'how':
             sqlquery.append("select ")
@@ -97,6 +86,7 @@ try:
             sqlquery.append('from divvy_2015 where gender="Female"')
             
 
+
     print(''.join(sqlquery) + ';')
 
 
@@ -105,10 +95,7 @@ try:
     sqliteConnection = sqlite3.connect("C:\\Users\\이정하\\Documents\\Divvy_Trips_2015-Q1Q2\\Divvy.db")
     cursor =sqliteConnection.cursor()
     print("Database created and Successfully Connected to SQLite")
-    sqlite_select_Query = "select sqlite_version();"
-    cursor.execute(sqlite_select_Query)
-    record = cursor.fetchall()
-    print("SQLite Database Version is: ", record)
+
 
     sqlite_Q1 = ''.join(sqlquery) + ';'
     cursor.execute(sqlite_Q1)
@@ -118,20 +105,7 @@ try:
         print(row)
         print("\n")
 
-    answer_list=[]
-
-    for word in all_words_list:
-        if (word == 'how') or (word =='many') or (word == 'what') or (word == 'where') or (word == 'which'):
-            continue
-        else:
-            answer_list.append('{0} '.format(word))
-    print(answer_list)
-
-    answer = ('{0}' +' '+ ''.join(answer_list)).format(row)
-
-    print(answer)
-
-    engine.say(answer)
+    engine.say("I think {0} left".format(row))
     engine.runAndWait()
 
     cursor.close()
