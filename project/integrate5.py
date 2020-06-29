@@ -42,8 +42,9 @@ with sr.Microphone(device_index=1, chunk_size=1024, sample_rate=48000) as source
     # get user's speech 
     audio1 = r.listen(source)
     daisy = "hey daisy"
-    
-    print("Sphinx thinks you said " + r.recognize_sphinx(audio1, language = "en-US", keyword_entries = [(daisy,0.8)]))
+    print("Sphinx thinks you said " + r.recognize_sphinx(audio1, language = "en-US"))
+
+    #print("Sphinx thinks you said " + r.recognize_sphinx(audio1, language = "en-US", keyword_entries = [(daisy,0.8)]))
     
     # speak to user 'say something!'
     engine.say("how can I help you?")
