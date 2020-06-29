@@ -31,6 +31,7 @@ with sr.Microphone(device_index=1, chunk_size=1024, sample_rate=48000) as source
     r.dynamic_energy_adjustment_damping = 0.15
     r.dynamic_energy_adjustment_ratio = 1.5
     r.pause_threshold = 0.8
+
     '''
     recognizer_instance.recognize_sphinx(audio_data: AudioData, language: str = "en-US", 
     keyword_entries: Union[Iterable[Tuple[str, float]], None] = None, 
@@ -42,15 +43,15 @@ with sr.Microphone(device_index=1, chunk_size=1024, sample_rate=48000) as source
     # get user's speech 
     audio1 = r.listen(source)
     daisy = "hey daisy"
-    print("Sphinx thinks you said " + r.recognize_sphinx(audio1, language = "en-US"))
 
-    #print("Sphinx thinks you said " + r.recognize_sphinx(audio1, language = "en-US", keyword_entries = [(daisy,0.8)]))
+    print("Sphinx thinks you said " + r.recognize_sphinx(audio1, keyword_entries= [(daisy,0.8)]))
     
     # speak to user 'say something!'
     engine.say("how can I help you?")
     engine.runAndWait()
     print("how can I help you?")
     print("\n")
+    
 
     audio2 = r.listen(source)
 try:

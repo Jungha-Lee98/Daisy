@@ -43,7 +43,7 @@ with sr.Microphone(device_index=1, chunk_size=1024, sample_rate=48000) as source
     # get user's speech 
     audio1 = r.listen(source)
     daisy = "hey daisy"
-    print("Sphinx thinks you said " + r.recognize_sphinx(audio1))
+    print("Sphinx thinks you said " + r.recognize_sphinx(audio1, keyword_entries = [(daisy,0.8)]))
     # recognize = r.recognize_sphinx(audio1)
     print(recognize)
 
@@ -52,7 +52,7 @@ with sr.Microphone(device_index=1, chunk_size=1024, sample_rate=48000) as source
         engine.say("call me again") 
         engine.runAndWait()
         audio1 = r.listen(source)
-        print("Sphinx thinks you said " + r.recognize_sphinx(audio1))
+        print("Sphinx thinks you said " + r.recognize_sphinx(audio1, keyword_entries = [(daisy,0.8)]))
         print(recognize)
 
 
