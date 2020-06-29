@@ -151,7 +151,7 @@ try:
         print("\n")
 
         # connect database,sqlite3
-        sqliteConnection = sqlite3.connect("C:\\Users\\USER\\divvy.db")
+        sqliteConnection = sqlite3.connect("C:\\Users\\이정하\\Documents\\Divvy_Trips_2015-Q1Q2\\Divvy.db")
         cursor =sqliteConnection.cursor()
         print("Database created and Successfully Connected to SQLite")
         print("\n")
